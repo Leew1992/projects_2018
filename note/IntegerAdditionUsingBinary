@@ -1,0 +1,88 @@
+package com.example.base;
+
+/**
+ * 两数相等，做按位与运算
+ * 两个不等，做按位或运算
+ */
+public class IntegerAdditionUsingBinary {
+    public static void main(String[] args) {
+        int result = new IntegerAdditionUsingBinary().calculateIntAddition(3, 5);
+        System.out.println(result);
+    }
+
+    /**
+     * 计算整数加法
+     */
+    public int calculateIntAddition(int value1, int value2) {
+        int[] values1 = convertIntToArray(value1);
+        int[] values2 = convertIntToArray(value2);
+
+        int[] results = calculateBinaryAddition(values1, values2);
+        String result = convertArrayToString(results);
+        return Integer.parseInt(result, 2);
+    }
+
+    /**
+     * 计算二进制加法
+     */
+    public int[] calculateBinaryAddition(int[] values1, int[] values2) {
+        int values1Length = values1.length;
+        int values2Length = values2.length;
+        int maxValuesLength = values1Length > values2Length ? values1Length : values2Length;
+
+        if (values1Length < maxValuesLength) {
+            values1 = expandOperateNumBits(values1, maxValuesLength);
+        }
+
+        if (values2Length < maxValuesLength) {
+            values2 = expandOperateNumBits(values2, maxValuesLength);
+        }
+
+        int carry = 0;
+        int[] results = new int[maxValuesLength + 1];
+        for (int i = 1; i <= maxValuesLength; i ++) {
+            results[maxValuesLength + 1 - i] = (values1[maxValuesLength - i] + values2[maxValuesLength - i] + carry) % 2;
+            carry = values1[maxValuesLength - i] + values2[maxValuesLength - i] + carry >= 2 ? 1 : 0;
+        }
+        results[0] = carry;
+
+        return results;
+    }
+
+    /**
+     * 整数转整型二进制数组
+     */
+    public int[] convertIntToArray(int value) {
+        String valuesString = Integer.toBinaryString(value);
+        char[] valuesCharArray = valuesString.toCharArray();
+        int[] valuesIntArray = new int[valuesString.length()];
+        for (int i = 0; i < valuesIntArray.length; i ++) {
+            valuesIntArray[i] = Integer.parseInt(String.valueOf(valuesCharArray[i]));
+        }
+        return valuesIntArray;
+    }
+
+    /**
+     * 数组转换为字符串
+     */
+    public String convertArrayToString(int[] array) {
+        String result = "";
+        for (int i = 0; i < array.length; i ++) {
+            result += array[i];
+        }
+        return result;
+    }
+
+    /**
+     * 扩容操作数
+     */
+    public int[] expandOperateNumBits(int[] values, int capacity) {
+        int[] tempValues = new int[capacity];
+        int valuesLength = values.length;
+        for (int i = 1; i <= valuesLength; i ++) {
+            tempValues[capacity - i]  = values[valuesLength - i];
+        }
+        return tempValues;
+    }
+
+}

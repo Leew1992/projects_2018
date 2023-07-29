@@ -1,0 +1,77 @@
+package com.example.base;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 大文本读取字符串出现的个数
+ * 以及每行出现的次数计算
+ *
+ * 写得挺好，加油！
+ */
+public class LookupStringInText {
+
+    private static String keyword = "is";
+    private static String filePath = "/Users/ZhangLiWei/IdeaProjects/spring-boot-demo/src/main/java/com/example/base/123.txt";
+
+    public static void main(String[] args) {
+        Map<Integer, Integer> countLineStringMap = countKeywordsPerLineStringInText(filePath);
+        System.out.println(countLineStringMap);
+    }
+
+    /**
+     * 统计文本中每行出现关键字的次数
+     */
+    private static Map<Integer, Integer> countKeywordsPerLineStringInText(String filePath) {
+        int lineNo = 0;
+        String lineString = null;
+        Map<Integer, Integer> countLineStringMap = new HashMap<>();
+
+        BufferedReader bufferedReader = readContentFromText(filePath);
+        try {
+            while((lineString = bufferedReader.readLine()) != null) {
+                int count = countKeywordsInLineString(keyword, lineString);
+                countLineStringMap.put(lineNo, count);
+                lineNo ++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return countLineStringMap;
+    }
+
+    /**
+     * 从文本中读取内容
+     */
+    private static BufferedReader readContentFromText(String filePath) {
+        File file = null;
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            file = new File(filePath);
+            fileReader = new FileReader(file);
+            bufferedReader = new BufferedReader(fileReader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bufferedReader;
+    }
+
+    /**
+     * 统计某个关键字在一行字符串中出现的次数
+     */
+    private static int countKeywordsInLineString(String keyword, String lineString) {
+        int index = 0;
+        int count = 0;
+        while((index = lineString.indexOf(keyword)) != -1) {
+            count ++;
+            lineString = lineString.substring(index + keyword.length(), lineString.length()-1);
+        }
+
+        return count;
+    }
+}
